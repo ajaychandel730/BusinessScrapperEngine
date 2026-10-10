@@ -1,0 +1,32 @@
+[
+    {
+        "name": "UK Finance",
+        "address": "Address: 1 Angel Ct, London EC2R 7HJ, United Kingdom ",
+        "website": "https://www.ukfinance.org.uk/",
+        "phone_number": null
+    },
+    {
+        "name": "CFI UK - Credit Financier Invest Limited",
+        "address": "Address: 16 Berkeley St, London W1J 8DZ, United Kingdom ",
+        "website": "https://cfifinancial.com/en-uk?utm_source=google&utm_medium=organic&utm_campaign=gmb-listing&utm_content=united-kingdom",
+        "phone_number": "+442039074131"
+    },
+    {
+        "name": "Industry Capital EFM Ltd.",
+        "address": "Address: 57-61 Mortimer St, London W1W 8HS, United Kingdom ",
+        "website": "http://industrycapital.com/em",
+        "phone_number": "+447444522869"
+    },
+    {
+        "name": "FINANCE LTD UK",
+        "address": "Address: 1 Northumberland Ave, Trafalgar Sq, London WC2N 5BW, United Kingdom ",
+        "website": null,
+        "phone_number": null
+    },
+    {
+        "name": "Liquid Corporate Finance",
+        "address": "Address: 124 City Rd, London EC1V 2NX, United Kingdom ",
+        "website": "http://www.liquidcf.co.uk/",
+        "phone_number": "+443337721782"
+    }
+]
