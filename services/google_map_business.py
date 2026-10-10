@@ -51,7 +51,7 @@ class GoogleMapBusiness:
                         phone_number=phone_number,
                         website=website,
                     )
-                hello=12    
+                 
                 return business_manager
             except Exception as err:
                 print("Error:", str(err))
