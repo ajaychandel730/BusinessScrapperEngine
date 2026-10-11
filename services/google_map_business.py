@@ -19,13 +19,26 @@ class GoogleMapBusiness:
                 await search_input_box.wait_for(state="visible", timeout=15000)
                 await search_input_box.fill(search_for)
                 await page.keyboard.press("Enter")
+                articles = page.get_by_role("article")
+                await articles.last.wait_for(state="visible", timeout=12000)
+
+                while True:
+                    await articles.last.hover()
+                    await page.mouse.wheel(0, 500)
+                    total_articles = await articles.count()
+                    print("every cycle:", total_articles)
+                    if total_articles > 50:
+                        print("article_count:", total_articles)
+                        break
+                    await page.wait_for_timeout(500)
 
                 # collect all article
-                articles = page.get_by_role("article")
-                await articles.first.wait_for(state="visible", timeout=12000)
                 articlesList = await articles.all()
 
-                for article in articlesList[:find]:
+                for article in articlesList[:50]:
+                    await article.scroll_into_view_if_needed()
+                    await page.wait_for_timeout(2000)
+                    await article.wait_for(state="visible", timeout=12000)
                     await article.click()
                     company_name = await article.get_by_role(
                         "link"
@@ -45,6 +58,7 @@ class GoogleMapBusiness:
                         page=page
                     )
                     #   #create business and append
+<<<<<<< HEAD
                     business_manager.add_company(
                         name=company_name,
                         address=address,
@@ -52,10 +66,19 @@ class GoogleMapBusiness:
                         website=website,
                     )
                  
+=======
+                    if company_name and address and phone_number and website:
+                        business_manager.add_company(
+                            name=company_name,
+                            address=address,
+                            phone_number=phone_number,
+                            website=website,
+                        )
+
+>>>>>>> 7fcad23 (added feature scrolling and limit)
                 return business_manager
             except Exception as err:
                 print("Error:", str(err))
                 return None
             finally:
                 await browser.close()
-               
