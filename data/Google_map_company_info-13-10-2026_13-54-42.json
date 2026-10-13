@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Bank of England",
+        "address": "Address: Threadneedle St, London EC2R 8AH, United Kingdom ",
+        "website": "https://www.bankofengland.co.uk/",
+        "phone_number": "+442034614444",
+        "rating": null
+    },
+    {
+        "name": "Bank Of Ceylon (UK) Ltd",
+        "address": "Address: 1 Devonshire Square, London EC2M 4WD, United Kingdom ",
+        "website": "http://www.bankofceylon.co.uk/",
+        "phone_number": "+442073771888",
+        "rating": null
+    },
+    {
+        "name": "Canara Bank",
+        "address": "Address: 10 Chiswell St, London EC1Y 4UQ, United Kingdom ",
+        "website": "https://www.canbanklondon.com/",
+        "phone_number": "+442076282187",
+        "rating": null
+    },
+    {
+        "name": "IndusInd Bank",
+        "address": "Address: Block A - 1st Floor, Combermere House, Indusind Bank Ltd, Shop No 15, Megna Complex, near Lift, The Mall, Shimla, Himachal Pradesh 171001 ",
+        "website": "https://www.indusind.bank.in/in/en/personal/locate-us.html?utm_source=Google_Organic_Search&utm_medium=Organic&utm_campaign=Local+Listings",
+        "phone_number": "18602677777",
+        "rating": null
+    }
+]

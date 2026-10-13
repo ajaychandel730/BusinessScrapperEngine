@@ -1,9 +1,8 @@
-from playwright.async_api import Browser, Page, async_playwright
-
+from playwright.async_api import async_playwright
 from scrapers.google_map_scraper import GoogleMapScraper
 from services.businessManager import BusinessManager
-
-
+from services.company_website import CompanyWebsite
+from models.businessModels import CompanyWebsiteInfo
 class GoogleMapBusiness:
     async def get_company_list(self, search_for: str, find: int):
         async with async_playwright() as p:
@@ -21,23 +20,35 @@ class GoogleMapBusiness:
                 await page.keyboard.press("Enter")
                 articles = page.get_by_role("article")
                 await articles.last.wait_for(state="visible", timeout=12000)
-
+                count = 0
+                pre_aticle_count = 0
                 while True:
                     await articles.last.hover()
                     await page.mouse.wheel(0, 500)
                     total_articles = await articles.count()
-                    print("every cycle:", total_articles)
-                    if total_articles > 50:
+                
+                    if pre_aticle_count == total_articles:
+                        count += 1
+                    else:
+                        count = 0
+                        
+                    if count > 5:
+                        break    
+                    
+                    pre_aticle_count = total_articles    
+                    
+                    print(f"every cycle:{count}:{pre_aticle_count}", total_articles)
+                    if total_articles > find:
                         print("article_count:", total_articles)
                         break
-                    await page.wait_for_timeout(500)
+                    await page.wait_for_timeout(1000)
 
                 # collect all article
                 articlesList = await articles.all()
 
-                for article in articlesList[:50]:
+                for article in articlesList[:find]:
                     await article.scroll_into_view_if_needed()
-                    await page.wait_for_timeout(2000)
+                    await page.wait_for_timeout(4000)
                     await article.wait_for(state="visible", timeout=12000)
                     await article.click()
                     company_name = await article.get_by_role(
@@ -58,27 +69,20 @@ class GoogleMapBusiness:
                         page=page
                     )
                     #   #create business and append
-<<<<<<< HEAD
-                    business_manager.add_company(
-                        name=company_name,
-                        address=address,
-                        phone_number=phone_number,
-                        website=website,
-                    )
-                 
-=======
-                    if company_name and address and phone_number and website:
+                    if company_name and website:
+                        company_website = CompanyWebsite() 
+                        company_website_info:CompanyWebsiteInfo = await company_website.get_company_info(url=website)
                         business_manager.add_company(
                             name=company_name,
                             address=address,
                             phone_number=phone_number,
                             website=website,
+                            emails=company_website_info.emails
                         )
-
->>>>>>> 7fcad23 (added feature scrolling and limit)
+                        
                 return business_manager
             except Exception as err:
-                print("Error:", str(err))
+                print("Error goole map :", str(err))
                 return None
             finally:
                 await browser.close()

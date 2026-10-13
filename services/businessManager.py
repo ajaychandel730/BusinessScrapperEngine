@@ -3,12 +3,12 @@ from datetime import datetime
 import json
 import os
 
-from models.business import Business
+from models.businessModels import CombinedCompanyDetails, GoogleMapBusinessInfo
 
 
 @dataclass
 class BusinessManager:
-    business_list: list[Business] = field(default_factory=list)
+    business_list: list[CombinedCompanyDetails] = field(default_factory=list)
 
     def dataframe(self):
         return pd.json_normalize(
@@ -40,10 +40,12 @@ class BusinessManager:
         address: str | None,
         website: str | None,
         phone_number: str | None,
+        emails:list[str]
     ):
-        business = Business()
+        business = CombinedCompanyDetails()
         business.name = name
         business.address = address
         business.website = website
         business.phone_number = phone_number
+        business.emails = emails
         self.business_list.append(business)

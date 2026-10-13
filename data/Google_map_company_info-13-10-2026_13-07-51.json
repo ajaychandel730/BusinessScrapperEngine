@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Bank of England",
+        "address": "Address: Threadneedle St, London EC2R 8AH, United Kingdom ",
+        "website": "https://www.bankofengland.co.uk/",
+        "phone_number": "+442034614444",
+        "rating": null
+    },
+    {
+        "name": "Bank Of Ceylon (UK) Ltd",
+        "address": "Address: 1 Devonshire Square, London EC2M 4WD, United Kingdom ",
+        "website": "http://www.bankofceylon.co.uk/",
+        "phone_number": "+442073771888",
+        "rating": null
+    },
+    {
+        "name": "IndusInd Bank",
+        "address": "Address: Block A - 1st Floor, Combermere House, Indusind Bank Ltd, Shop No 15, Megna Complex, near Lift, The Mall, Shimla, Himachal Pradesh 171001 ",
+        "website": "https://www.indusind.bank.in/in/en/personal/locate-us.html?utm_source=Google_Organic_Search&utm_medium=Organic&utm_campaign=Local+Listings",
+        "phone_number": "18602677777",
+        "rating": null
+    },
+    {
+        "name": "Punjab National Bank - ATM",
+        "address": "Address: Ground Floor, Mall Rd, near Gaindamull Hemraj Store, The Mall, Shimla, Himachal Pradesh 171001 ",
+        "website": "https://locate.pnb.bank.in/punjab-national-bank-atm-atm-mall-road-shimla-521118/Home?utm_source=locator&utm_medium=googleplaces",
+        "phone_number": "18001800",
+        "rating": null
+    }
+]
