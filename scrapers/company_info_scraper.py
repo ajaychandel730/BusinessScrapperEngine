@@ -2,6 +2,7 @@ from urllib.parse import urlsplit
 
 from playwright.async_api import Page, BrowserContext
 import re
+from services.email_filter_engine import EmailFilterEngine
 
 FALLBACK_ROUTES = [
     # Contact pages
@@ -82,42 +83,17 @@ class CompanyInfoScraper:
             for blocked_domain in DISALLOWED_CONSUMER_DOMAINS
         )
 
-    def filter_business_emails(self, emails: list[str]) -> list[str]:
-        """Return unique emails that do not use blocked email domains."""
-        valid_business_emails: set[str] = set()
+   
 
-        for email in emails:
-            clean_email = email.strip().lower()
-
-            # Basic structural validation
-            if clean_email.count("@") != 1:
-                continue
-
-            local_part, domain = clean_email.split("@")
-
-            if not local_part or not domain:
-                continue
-
-            # Reject blocked consumer email domains
-            if self.is_consumer_domain(domain):
-                continue
-
-            # Preserve order while removing duplicates
-            valid_business_emails.add(clean_email)
-
-        return list(valid_business_emails)
-
-    async def get_emails_list(self, page: Page, context: BrowserContext):
-        footer = page.locator("footer")
-        await footer.first.wait_for(state="visible", timeout=12000)
-        footer_text = await footer.first.inner_text()
-        footer_emails = await self.getEmailsFromText(footer_text)
-        #   email_regx = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-        #   footer_raw_emails: list[str] = re.findall(email_regx, footer_text)
-        #   footer_emails = list({email.strip().lower() for email in footer_raw_emails})
-
-        if len(footer_emails) > 0:
-            return footer_emails
+    async def get_emails_list(self, page: Page, context: BrowserContext, maxLimit:int=5):
+        email_filter_engine = EmailFilterEngine() 
+        body = page.locator("body")
+        await body.first.wait_for(state="visible", timeout=12000)
+        body_text = await body.first.inner_text()
+        body_emails = (await self.getEmailsFromText(body_text)) + (await self.get_emails_from_mailto(page))
+         
+        if len(body_emails) > 0:
+            return await email_filter_engine.email_filter(body_emails, limit=maxLimit)
 
         # check in nav links
         links = page.locator("nav a")
@@ -150,7 +126,7 @@ class CompanyInfoScraper:
         link_list = set(link_hrefs)
         unique_link_hrefs = list(link_list)
         print("uniqueLinks:", unique_link_hrefs)
-        filter_unique = set()
+        filter_unique_emails = set()
 
         for link in unique_link_hrefs:
             try:
@@ -166,12 +142,14 @@ class CompanyInfoScraper:
                 body_text = await page_body.inner_text()
                 new_emails = await self.getEmailsFromText(body_text)
                 mailto_emails = await self.get_emails_from_mailto(new_page)
-                filter_unique.update(new_emails)
-                filter_unique.update(mailto_emails)
+                filter_unique_emails.update(new_emails)
+                filter_unique_emails.update(mailto_emails)
             except Exception as err:
                 print("error during extract email from link:", str(err))
             finally:
                 await new_page.close()
 
-        print("emails before filter:", list(filter_unique))
-        return self.filter_business_emails(list(filter_unique))
+        print("emails before filter:", list(filter_unique_emails))
+        return await email_filter_engine.email_filter(list(filter_unique_emails), limit=maxLimit)
+        
+    

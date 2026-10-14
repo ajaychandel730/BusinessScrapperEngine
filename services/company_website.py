@@ -23,10 +23,10 @@ class CompanyWebsite:
                 )
                 company_website_info = CompanyWebsiteInfo()
                 company_website_info.emails = emails
-                print("emails:", emails)
+                print("final_emails:", emails)
                 return company_website_info
             except Exception as err:
-                print("Error:", str(err))
+                print("service/company_website_Error:", str(err))
                 return CompanyWebsiteInfo()
             finally:
                 await context.close()
