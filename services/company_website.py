@@ -1,5 +1,7 @@
 from playwright.async_api import Browser, Page, async_playwright
 
+from config import GOOGLE_MAPS_URL, HEADLESS, browser_args
+from api.exception_handler.global_exception_handler import GlobalException
 from scrapers.google_map_scraper import GoogleMapScraper
 from services.businessManager import BusinessManager
 import re
@@ -8,9 +10,14 @@ from models.businessModels import CompanyWebsiteInfo
 
 
 class CompanyWebsite:
-    async def get_company_info(self, url: str)-> CompanyWebsiteInfo:
+    async def get_company_info(self, url: str) -> CompanyWebsiteInfo:
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=False)
+            if not GOOGLE_MAPS_URL:
+                raise GlobalException(
+                    message="Google Maps URL configuration is missing in environment variables.",
+                    status_code=500,
+                )
+            browser = await p.chromium.launch(headless=HEADLESS, args=browser_args)
             company_info_scraper = CompanyInfoScraper()
             try:
                 page = await browser.new_page()
@@ -23,7 +30,6 @@ class CompanyWebsite:
                 )
                 company_website_info = CompanyWebsiteInfo()
                 company_website_info.emails = emails
-                print("final_emails:", emails)
                 return company_website_info
             except Exception as err:
                 print("service/company_website_Error:", str(err))

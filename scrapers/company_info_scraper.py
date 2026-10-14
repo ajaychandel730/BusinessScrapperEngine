@@ -125,7 +125,6 @@ class CompanyInfoScraper:
         # maintain unique list
         link_list = set(link_hrefs)
         unique_link_hrefs = list(link_list)
-        print("uniqueLinks:", unique_link_hrefs)
         filter_unique_emails = set()
 
         for link in unique_link_hrefs:
@@ -149,7 +148,6 @@ class CompanyInfoScraper:
             finally:
                 await new_page.close()
 
-        print("emails before filter:", list(filter_unique_emails))
         return await email_filter_engine.email_filter(list(filter_unique_emails), limit=maxLimit)
         
     

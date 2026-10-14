@@ -1,18 +1,36 @@
+import asyncio
+import sys
+
 from playwright.async_api import async_playwright
+from api.exceptions.global_exception import GlobalException
 from scrapers.google_map_scraper import GoogleMapScraper
 from services.businessManager import BusinessManager
 from services.company_website import CompanyWebsite
 from models.businessModels import CompanyWebsiteInfo
+from config import HEADLESS, browser_args, GOOGLE_MAPS_URL
+
+
 class GoogleMapBusiness:
+    def scrape_runner(self, search_for: str, find: int):
+        """Runs the async scraper in an isolated thread with Windows Proactor loop."""
+        loop_factory = asyncio.ProactorEventLoop if sys.platform == "win32" else None
+        return asyncio.run(
+            self.get_company_list(search_for, find), loop_factory=loop_factory
+        )
+
     async def get_company_list(self, search_for: str, find: int):
         async with async_playwright() as p:
             google_map_scraper = GoogleMapScraper()
-            browser = await p.chromium.launch(headless=False)
+            browser = await p.chromium.launch(headless=HEADLESS, args=browser_args)
             business_manager = BusinessManager()
             try:
+                if not GOOGLE_MAPS_URL:
+                    raise GlobalException(
+                        message="Google Maps URL configuration is missing in environment variables.",
+                        status_code=500,
+                    )
                 page = await browser.new_page()
-                await page.goto("https://google.com/maps", timeout=60000)
-
+                await page.goto(GOOGLE_MAPS_URL, timeout=60000)
                 # search input operations
                 search_input_box = page.get_by_role("combobox")
                 await search_input_box.wait_for(state="visible", timeout=15000)
@@ -26,17 +44,17 @@ class GoogleMapBusiness:
                     await articles.last.hover()
                     await page.mouse.wheel(0, 500)
                     total_articles = await articles.count()
-                
+
                     if pre_aticle_count == total_articles:
                         count += 1
                     else:
                         count = 0
-                        
+
                     if count > 5:
-                        break    
-                    
-                    pre_aticle_count = total_articles    
-                    
+                        break
+
+                    pre_aticle_count = total_articles
+
                     print(f"every cycle:{count}:{pre_aticle_count}", total_articles)
                     if total_articles > find:
                         print("article_count:", total_articles)
@@ -68,18 +86,26 @@ class GoogleMapBusiness:
                     phone_number = await google_map_scraper.get_company_phone_number(
                         page=page
                     )
+                    # company rating
+                    rating = await google_map_scraper.get_company_rating(
+                        article=article
+                    )
+
                     #   #create business and append
                     if company_name and website:
-                        company_website = CompanyWebsite() 
-                        company_website_info:CompanyWebsiteInfo = await company_website.get_company_info(url=website)
+                        company_website = CompanyWebsite()
+                        company_website_info: CompanyWebsiteInfo = (
+                            await company_website.get_company_info(url=website)
+                        )
                         business_manager.add_company(
                             name=company_name,
                             address=address,
                             phone_number=phone_number,
                             website=website,
-                            emails=company_website_info.emails
+                            rating=rating,
+                            emails=company_website_info.emails,
                         )
-                        
+
                 return business_manager
             except Exception as err:
                 print("Error goole map :", str(err))

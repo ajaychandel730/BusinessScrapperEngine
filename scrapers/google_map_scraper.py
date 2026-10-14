@@ -1,8 +1,7 @@
 
-from playwright.async_api import Page
+from playwright.async_api import Page, Locator
 
 class GoogleMapScraper:
-    
     async def get_main_info_section(self, page: Page, company_name:str):
         main_section = page.locator(
                     f'[aria-label="{company_name}"][role="main"]'
@@ -36,4 +35,9 @@ class GoogleMapScraper:
             phone_number = None
             
         return phone_number     
-        
+    async def get_company_rating(self, article:Locator)->str|None:
+         rating = article.locator('[role="img"]')
+         if (await rating.count()) == 0:
+             return None
+         await rating.wait_for(state="visible", timeout=12000)
+         return await rating.inner_text()    

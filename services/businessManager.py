@@ -40,6 +40,7 @@ class BusinessManager:
         address: str | None,
         website: str | None,
         phone_number: str | None,
+        rating:str|None,
         emails:list[str]
     ):
         business = CombinedCompanyDetails()
@@ -47,5 +48,6 @@ class BusinessManager:
         business.address = address
         business.website = website
         business.phone_number = phone_number
+        business.rating=rating
         business.emails = emails
         self.business_list.append(business)
