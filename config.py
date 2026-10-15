@@ -7,6 +7,7 @@ load_dotenv()
 # Read the environment name (default to 'production' for safety)
 ENVIRONMENT = os.getenv("ENVIRONMENT", "production").strip().lower()
 GOOGLE_MAPS_URL= os.getenv("GOOGLE_MAPS_URL", None)
+print("env:", ENVIRONMENT)
 # If production, headless is ALWAYS True; otherwise False for local development
 if ENVIRONMENT == "production":
     HEADLESS = True

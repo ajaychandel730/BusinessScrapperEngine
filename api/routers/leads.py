@@ -28,6 +28,7 @@ async def get_scraped_leads(
     try:
         search_for = f"{search},{location}"
         plain_text = nh3.clean(search_for, tags=set())
+        print("plain_text:", plain_text)
         # check spam input
         if nh3.is_html(search_for) or plain_text != search_for:
             raise SecurityInputValidationException(field_name="search and location")

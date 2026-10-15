@@ -5,6 +5,7 @@ from api.exceptions.global_exception import GlobalException
 
 
 async def global_exception_handler(request: Request, exc: GlobalException):
+  print(f"{str(exc)}:type {type(exc).__name__}")
   return JSONResponse(
       status_code=exc.status_code,
       content={

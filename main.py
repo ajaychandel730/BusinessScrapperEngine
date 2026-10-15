@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response, status
 from fastapi.exceptions import RequestValidationError
-from api.exception_handler import global_exception_handler
+from api.exception_handler.global_exception_handler import global_exception_handler
 from api.exception_handler.custom_exception_handler import validation_exception_handler
 from api.exceptions.global_exception import GlobalException
 from api.main_router import main_router
@@ -18,6 +18,7 @@ def health_check(response:Response):
     response.status_code = status.HTTP_200_OK
     return {"status":"ok"}
 
+# Check before registering:
 app.add_exception_handler(GlobalException, global_exception_handler)
 
 # 2. Catch missing query params / wrong types / validation errors

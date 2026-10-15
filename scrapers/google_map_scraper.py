@@ -36,8 +36,8 @@ class GoogleMapScraper:
             
         return phone_number     
     async def get_company_rating(self, article:Locator)->str|None:
-         rating = article.locator('[role="img"]')
+         rating = article.locator('[role="img"]').first
          if (await rating.count()) == 0:
              return None
-         await rating.wait_for(state="visible", timeout=12000)
-         return await rating.inner_text()    
+         await rating.wait_for(state="attached", timeout=12000)
+         return await rating.get_attribute("aria-label")    

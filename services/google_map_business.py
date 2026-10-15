@@ -105,10 +105,10 @@ class GoogleMapBusiness:
                             rating=rating,
                             emails=company_website_info.emails,
                         )
-
+               
                 return business_manager
             except Exception as err:
-                print("Error goole map :", str(err))
+                print("Error google map :", str(err))
                 return None
             finally:
                 await browser.close()
