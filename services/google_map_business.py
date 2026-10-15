@@ -8,7 +8,7 @@ from scrapers.google_map_scraper import GoogleMapScraper
 from services.businessManager import BusinessManager
 from services.company_website import CompanyWebsite
 from models.businessModels import CompanyWebsiteInfo
-from config import HEADLESS, browser_args, GOOGLE_MAPS_URL
+from config import DESKTOP_CONTEXT_OPTIONS, HEADLESS, browser_args, GOOGLE_MAPS_URL
 
 
 class GoogleMapBusiness:
@@ -30,7 +30,8 @@ class GoogleMapBusiness:
                         message="Google Maps URL configuration is missing in environment variables.",
                         status_code=500,
                     )
-                page = await browser.new_page()
+                context = await browser.new_context(**DESKTOP_CONTEXT_OPTIONS)    
+                page = await context.new_page()
                 await page.goto(GOOGLE_MAPS_URL, timeout=60000)
                 # search input operations
                 search_input_box = page.get_by_role("combobox")

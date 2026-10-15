@@ -1,6 +1,6 @@
-from playwright.async_api import Browser, Page, async_playwright
+from playwright.async_api import Page, async_playwright
 
-from config import GOOGLE_MAPS_URL, HEADLESS, browser_args
+from config import DESKTOP_CONTEXT_OPTIONS, GOOGLE_MAPS_URL, HEADLESS, browser_args
 from api.exception_handler.global_exception_handler import GlobalException
 from scrapers.google_map_scraper import GoogleMapScraper
 from services.businessManager import BusinessManager
@@ -20,8 +20,8 @@ class CompanyWebsite:
             browser = await p.chromium.launch(headless=HEADLESS, args=browser_args)
             company_info_scraper = CompanyInfoScraper()
             try:
-                page = await browser.new_page()
-                context = await browser.new_context()
+                context = await browser.new_context(**DESKTOP_CONTEXT_OPTIONS)
+                page = await context.new_page()
 
                 await page.goto(url, wait_until="domcontentloaded")
                 await page.wait_for_timeout(2000)
