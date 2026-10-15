@@ -2,6 +2,7 @@ import asyncio
 import sys
 
 from playwright.async_api import async_playwright
+from api.exceptions.custom_exception import ScraperFailedException
 from api.exceptions.global_exception import GlobalException
 from scrapers.google_map_scraper import GoogleMapScraper
 from services.businessManager import BusinessManager
@@ -109,6 +110,6 @@ class GoogleMapBusiness:
                 return business_manager
             except Exception as err:
                 print("Error google map :", str(err))
-                return None
+                raise ScraperFailedException(message=str(err))
             finally:
                 await browser.close()
