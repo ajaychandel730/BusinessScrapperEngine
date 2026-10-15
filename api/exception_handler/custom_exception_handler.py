@@ -23,3 +23,19 @@ async def validation_exception_handler(
           "message": f"Validation failed: {error_summary}"
       },
   )
+  
+  
+async def unexpected_exception_handler(
+    request: Request,
+    exc: Exception,
+):
+    print("Error:", str(exc))
+
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": "error",
+            "message": "Unknown eror. Please try later",
+        },
+    )  
+  

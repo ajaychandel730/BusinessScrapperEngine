@@ -40,10 +40,10 @@ class GoogleMapBusiness:
                 await page.keyboard.press("Enter")
                 articles = page.get_by_role("article")
                 await articles.first.wait_for(state="attached", timeout=32000)
+                await articles.first.hover()
                 count = 0
                 pre_aticle_count = 0
                 while True:
-                    await articles.first.hover()
                     await page.mouse.wheel(0, 500)
                     total_articles = await articles.count()
 
@@ -99,7 +99,7 @@ class GoogleMapBusiness:
                     if company_name and website:
                         company_website = CompanyWebsite()
                         company_website_info: CompanyWebsiteInfo = (
-                            await company_website.get_company_info(url=website)
+                            await company_website.get_company_info(context, url=website)
                         )
                         print("company_website_info:", company_website_info)
                         business_manager.add_company(

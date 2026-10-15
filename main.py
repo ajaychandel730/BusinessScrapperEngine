@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response, status
 from fastapi.exceptions import RequestValidationError
 from api.exception_handler.global_exception_handler import global_exception_handler
-from api.exception_handler.custom_exception_handler import validation_exception_handler
+from api.exception_handler.custom_exception_handler import unexpected_exception_handler, validation_exception_handler
 from api.exceptions.global_exception import GlobalException
 from api.main_router import main_router
 import uvicorn
@@ -25,6 +25,8 @@ app.add_exception_handler(GlobalException, global_exception_handler)
 app.add_exception_handler(
     RequestValidationError, validation_exception_handler
 )
+
+app.add_exception_handler(Exception, unexpected_exception_handler)
 
 
 if __name__ == "__main__":

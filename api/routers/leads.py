@@ -11,7 +11,7 @@ from api.exceptions.global_exception import GlobalException
 from services.google_map_business import GoogleMapBusiness
 
 router = APIRouter(prefix="/leads", tags=["Leads"])
-executor = ThreadPoolExecutor(max_workers=3)
+executor = ThreadPoolExecutor()
 
 @router.get("/")
 async def get_scraped_leads(
