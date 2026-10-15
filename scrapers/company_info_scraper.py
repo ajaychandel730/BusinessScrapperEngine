@@ -88,7 +88,7 @@ class CompanyInfoScraper:
     async def get_emails_list(self, page: Page, context: BrowserContext, maxLimit:int=5):
         email_filter_engine = EmailFilterEngine() 
         body = page.locator("body")
-        await body.first.wait_for(state="visible", timeout=12000)
+        await body.first.wait_for(state="attached", timeout=12000)
         body_text = await body.first.inner_text()
         body_emails = (await self.getEmailsFromText(body_text)) + (await self.get_emails_from_mailto(page))
          
@@ -100,7 +100,7 @@ class CompanyInfoScraper:
         if await links.count() > 0:
            await links.first.wait_for(state="attached", timeout=12000)
            
-        # Human-readable keywords for visible/hidden link text
+        # Human-readable keywords for visible hidden link text
         TARGET_KEYWORDS = [
             r"contact",
             r"get\s+in\s+touch",
@@ -137,7 +137,7 @@ class CompanyInfoScraper:
                     continue
                 await new_page.wait_for_timeout(2000)
                 page_body = new_page.locator("body")
-                await page_body.wait_for(state="visible", timeout=12000)
+                await page_body.wait_for(state="attached", timeout=12000)
                 body_text = await page_body.inner_text()
                 new_emails = await self.getEmailsFromText(body_text)
                 mailto_emails = await self.get_emails_from_mailto(new_page)
