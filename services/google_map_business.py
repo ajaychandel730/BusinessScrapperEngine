@@ -34,15 +34,15 @@ class GoogleMapBusiness:
                 await page.goto(GOOGLE_MAPS_URL, timeout=60000)
                 # search input operations
                 search_input_box = page.get_by_role("combobox")
-                await search_input_box.wait_for(state="visible", timeout=15000)
+                await search_input_box.wait_for(state="attached", timeout=15000)
                 await search_input_box.fill(search_for)
                 await page.keyboard.press("Enter")
                 articles = page.get_by_role("article")
-                await articles.last.wait_for(state="visible", timeout=12000)
+                await articles.first.wait_for(state="attached", timeout=32000)
                 count = 0
                 pre_aticle_count = 0
                 while True:
-                    await articles.last.hover()
+                    await articles.first.hover()
                     await page.mouse.wheel(0, 500)
                     total_articles = await articles.count()
 
@@ -68,7 +68,7 @@ class GoogleMapBusiness:
                 for article in articlesList[:find]:
                     await article.scroll_into_view_if_needed()
                     await page.wait_for_timeout(4000)
-                    await article.wait_for(state="visible", timeout=12000)
+                    await article.wait_for(state="attached", timeout=32000)
                     await article.click()
                     company_name = await article.get_by_role(
                         "link"
