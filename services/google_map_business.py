@@ -60,11 +60,11 @@ class GoogleMapBusiness:
                     if total_articles > find:
                         print("article_count:", total_articles)
                         break
-                    await page.wait_for_timeout(1000)
+                    await page.wait_for_timeout(2000)
 
                 # collect all article
                 articlesList = await articles.all()
-
+               
                 for article in articlesList[:find]:
                     await article.scroll_into_view_if_needed()
                     await page.wait_for_timeout(4000)
@@ -73,31 +73,34 @@ class GoogleMapBusiness:
                     company_name = await article.get_by_role(
                         "link"
                     ).first.get_attribute("aria-label")
-
+                    print("companyName:", company_name)
                     # main info section
                     main_section = await google_map_scraper.get_main_info_section(
                         page=page, company_name=company_name
                     )
+                    print("main_section", await main_section.count())
                     address = await google_map_scraper.get_company_address(page=page)
-
+                    print("address", address) 
                     # company website link
                     website = await google_map_scraper.get_company_website(page=page)
-
+                    print("website:", website)
                     # company phone number
                     phone_number = await google_map_scraper.get_company_phone_number(
                         page=page
                     )
+                    print("phone_number", phone_number)
                     # company rating
                     rating = await google_map_scraper.get_company_rating(
                         article=article
                     )
-
+                    print("rating", rating)
                     #   #create business and append
                     if company_name and website:
                         company_website = CompanyWebsite()
                         company_website_info: CompanyWebsiteInfo = (
                             await company_website.get_company_info(url=website)
                         )
+                        print("company_website_info:", company_website_info)
                         business_manager.add_company(
                             name=company_name,
                             address=address,
